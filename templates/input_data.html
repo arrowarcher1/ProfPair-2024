@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProfPair - Professor Data Entry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 4em;
+            letter-spacing: 2px;
+            font-family: 'Bubblegum Sans', cursive;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            color: #4a90e2;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .home-icon {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            cursor: pointer;
+            width: 70px;
+            height: auto;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        textarea {
+            resize: vertical;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        h2, h3 {
+            color: #4a90e2;
+        }
+        #word-count {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>ProfPair</span>
+        <img class="home-icon" src="https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/home-button-white-icon.png" alt="Home" onclick="window.location.href='/'">
+    </header>
+
+    <div class="container">
+        <h2>Input Professor Data</h2>
+        <form id="professorDataForm">
+            <div class="form-section">
+                <h3>Professor Information</h3>
+                <label for="professor_name">Professor Name:</label>
+                <input type="text" id="professor_name" name="professor_name" required>
+
+                <label for="overall_score">Overall Score (1-5):</label>
+                <input type="number" id="overall_score" name="overall_score" min="1" max="5" step="0.1" required>
+
+                <label for="difficulty">Difficulty (1-5):</label>
+                <input type="number" id="difficulty" name="difficulty" min="1" max="5" step="0.1" required>
+
+                <label for="workload">Workload (1-5):</label>
+                <input type="number" id="workload" name="workload" min="1" max="5" step="0.1" required>
+
+                <label for="review">Review (max 250 words):</label>
+                <textarea id="review" name="review" rows="6" required></textarea>
+                <div id="word-count">Words: 0 / 250</div>
+            </div>
+
+            <div class="form-section">
+                <h3>Course Information</h3>
+                <label for="study_hours">Study Hours (per week):</label>
+                <input type="number" id="study_hours" name="study_hours" min="0" step="0.1" required>
+
+                <label for="credits_taken">Credits Taken:</label>
+                <input type="number" id="credits_taken" name="credits_taken" min="1" max="18" step="0.1" required>
+
+                <label for="stress_level">Stress Level (1-5):</label>
+                <input type="number" id="stress_level" name="stress_level" min="1" max="5" step="0.1" required>
+
+                <label for="office_hours">Office Hours Attended (hours per week):</label>
+                <input type="number" id="office_hours" name="office_hours" min="0" step="0.1" required>
+
+                <label for="extracurricular_hours">Extracurricular Hours (per week):</label>
+                <input type="number" id="extracurricular_hours" name="extracurricular_hours" min="0" step="0.1" required>
+
+                <label for="grade">Grade:</label>
+                <select id="grade" name="grade" required>
+                    <option value="">Select a grade</option>
+                    <option value="A">A</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B">B</option>
+                    <option value="B-">B-</option>
+                    <option value="C+">C+</option>
+                    <option value="C">C</option>
+                    <option value="C-">C-</option>
+                    <option value="D+">D+</option>
+                    <option value="D">D</option>
+                    <option value="D-">D-</option>
+                    <option value="F">F</option>
+                </select>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const reviewTextarea = document.getElementById('review');
+        const wordCountDiv = document.getElementById('word-count');
+
+        reviewTextarea.addEventListener('input', function() {
+            const words = this.value.trim().split(/\s+/).filter(Boolean);
+            const wordCount = words.length;
+            wordCountDiv.textContent = `Words: ${wordCount} / 250`;
+
+            if (wordCount > 250) {
+                this.value = words.slice(0, 250).join(' ');
+                wordCountDiv.textContent = 'Words: 250 / 250';
+            }
+        });
+
+        document.getElementById('professorDataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/submit_s3_data', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = data.message || data.error;
+                messageDiv.style.backgroundColor = data.message ? '#dff0d8' : '#f2dede';
+                messageDiv.style.color = data.message ? '#3c763d' : '#a94442';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                //const messageDiv = document.getElementById('message');
+                //messageDiv.textContent = 'An error occurred. Please try again.';
+                //messageDiv.style.backgroundColor = '#f2dede';
+                //messageDiv.style.color = '#a94442';
+            });
+        });
+    </script>
+</body>
+</html>

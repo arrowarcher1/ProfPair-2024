@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .header-icons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 4em;
+            letter-spacing: 2px;
+            font-family: 'Bubblegum Sans', cursive;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        #lehigh-icon {
+            display: none;
+            width: 100px;
+            height: auto;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+        }
+
+        #lafayette-icon {
+            display: none;
+            width: 100px;
+            height: auto;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+        }
+
+        .home-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        input[type="text"],
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #4a90e2;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        #course-selection {
+            display: none;
+        }
+        .header-button {
+        background-color: white;
+        color: #4a90e2;
+        border: none;
+        padding: 8px 12px;
+        margin-right: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .header-button:hover {
+        background-color: #357abd;
+        color: white;
+    }
+
+        .professor-score {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            font-size: 1.5em;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .professor-score img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        .professor-score canvas {
+            margin-top: 10px;
+            width: 100px;
+            height: 100px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <img id="lehigh-icon" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/65/LehighMountainHawks.svg/440px-LehighMountainHawks.svg.png" alt="Lehigh University Logo">
+        <img id="lafayette-icon" src="https://images.sidearmdev.com/convert?url=https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/goleopards.com/images/logos/site/site.png&type=webp" alt="Lafayette College Logo">
+        <span>ProfPair</span>
+        <div class="header-icons">
+        <button id="review-button"  class="header-button" onclick="window.location.href='/review'" >Write a review</button>
+        <img class="home-icon" src="https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/home-button-white-icon.png" alt="Home" onclick="window.location.href='/'">
+        </div>
+    </header>
+    <div class="container">
+        <p>Enter your university:</p>
+        <form id="university-form" onsubmit="event.preventDefault(); showCourses();">
+            <input type="text" id="university-input" placeholder="Enter your university name" required>
+            <input type="submit" value="Submit">
+        </form>
+
+        <div id="course-selection">
+            <div id="tags-display"></div>
+            <h2>Select Course:</h2>
+            <select id="course-dropdown" onchange="showProfessors()">
+                <option value="">Select a course</option>
+                <option value="CSE 007">CSE 007</option>
+                <option value="CSE 017">CSE 017</option>
+                <option value="CSE 109">CSE 109</option>
+                <option value="CSE 216">CSE 216</option>
+                <option value="CSE 303">CSE 303</option>
+                <!-- Add more courses as needed -->
+            </select>
+        </div>
+
+        <div id="professor-scores"></div>
+    </div>
+
+    <script>
+        function showCourses() {
+            const universityInput = document.getElementById('university-input').value;
+            document.getElementById('course-selection').style.display = 'block';
+
+            if (universityInput.toLowerCase() === 'lehigh university') {
+                document.getElementById('header').style.backgroundColor = '#7d4c3a';
+                document.getElementById('lehigh-icon').style.display = 'block';
+                document.getElementById('lafayette-icon').style.display = 'none';
+            } else if (universityInput.toLowerCase() === 'lafayette college') {
+                document.getElementById('header').style.backgroundColor = '#a50000';
+                document.getElementById('lafayette-icon').style.display = 'block';
+                document.getElementById('lehigh-icon').style.display = 'none';
+            } else {
+                document.getElementById('header').style.backgroundColor = '#4a90e2';
+                document.getElementById('lehigh-icon').style.display = 'none';
+                document.getElementById('lafayette-icon').style.display = 'none';
+            }
+        }
+
+        function showProfessors() {
+    const course = document.getElementById('course-dropdown').value;
+    if (!course) return;
+
+    fetch(`/get_scores/${course}`)
+        .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch scores'))
+        .then(data => {
+            const professorScoresDiv = document.getElementById('professor-scores');
+            professorScoresDiv.innerHTML = '';
+
+            return fetch(`/get_tags/${course}`)
+                .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch tags'))
+                .then(tagData => {
+                    for (const [professor, scoreData] of Object.entries(data)) {
+                        const professorElement = document.createElement('div');
+                        professorElement.className = 'professor-score';
+                        professorElement.style.display = 'flex';
+                        professorElement.style.flexDirection = 'column';
+                        professorElement.style.alignItems = 'center';
+                        professorElement.style.marginBottom = '20px';
+
+                        const [overallScore, predictedGrade] = scoreData.split(' ');
+                        const numericScore = parseFloat(overallScore);
+
+                        // Create the professor name
+                        const professorName = document.createElement('span');
+                        professorName.style.fontWeight = 'bold';
+                        professorName.style.fontSize = '1.5em';
+                        professorName.textContent = `Professor ${professor}`;
+                        professorElement.appendChild(professorName);
+
+                        const scoreDisplay = document.createElement('div');
+                        scoreDisplay.innerHTML = `Overall Rating: ${overallScore} <br> Predicted Grade: ${predictedGrade}`;
+                        professorElement.appendChild(scoreDisplay);
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 100;
+                        canvas.height = 100;
+                        professorElement.appendChild(canvas);
+
+                        const ctx = canvas.getContext('2d');
+                        const chart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: [],
+                                datasets: [{
+                                    label: 'Score',
+                                    data: [numericScore, 100 - numericScore],
+                                    backgroundColor: ['#4caf50', '#e57373'],
+                                }]
+                            },
+                            options: {
+                                responsive: false,
+                                plugins: {
+                                    legend: {
+                                        display: false,
+                                    },
+                                    datalabels: {
+                                        color: '#fff',
+                                        formatter: (value) => value + '%',
+                                    }
+                                }
+                            }
+                        });
+
+                        const professorImage = document.createElement('img');
+                        professorImage.src = getProfessorImage(professor);
+                        professorImage.alt = `${professor} Profile Picture`;
+                        professorImage.style.display = 'block';
+                        professorImage.style.marginTop = '10px';
+                        professorImage.style.marginBottom = '10px';
+                        professorElement.appendChild(professorImage);
+
+                        const tags = tagData[professor] ? Object.keys(tagData[professor].tags) : [];
+                        const tagsDisplay = document.createElement('div');
+                        tagsDisplay.style.backgroundColor = '#007BFF';
+                        tagsDisplay.style.color = '#fff';
+                        tagsDisplay.style.padding = '10px';
+                        tagsDisplay.style.borderRadius = '5px';
+                        tagsDisplay.style.marginTop = '10px';
+                        tagsDisplay.style.textAlign = 'left';
+
+                        if (tags.length > 0) {
+                            tagsDisplay.textContent = `Tags: ${tags.join(', ')}`;
+                        } else {
+                            tagsDisplay.textContent = 'Tags: No tags available';
+                        }
+
+                        professorElement.appendChild(tagsDisplay);
+                        professorScoresDiv.appendChild(professorElement);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+
+
+        function getProfessorImage(professor) {
+            switch (professor) {
+                case 'Kim':
+                    return 'https://cdn-icons-png.flaticon.com/512/2784/2784445.png';
+                case 'Ross':
+                    return 'https://cdn-icons-png.flaticon.com/512/10618/10618211.png';
+                case 'Mclean':
+                    return 'https://cdn-icons-png.flaticon.com/512/2883/2883841.png';
+                case 'Tucker':
+                    return 'https://cdn-icons-png.flaticon.com/512/3829/3829792.png';
+                case 'Gonzales':
+                    return 'https://cdn-icons-png.flaticon.com/512/1048/1048949.png';
+                default:
+                    return 'https://cdn-icons-png.flaticon.com/512/2784/2784445.png';
+            }
+        }
+    </script>
+</body>
+
+</html>
